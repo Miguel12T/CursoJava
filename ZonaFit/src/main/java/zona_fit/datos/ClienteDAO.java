@@ -30,14 +30,14 @@ public class ClienteDAO implements IClienteDAO{
          }
       }
       catch (Exception e) {
-         System.out.println("Error al listar clientes: " + e);
+         System.out.println("Error al listar clientes: " + e.getMessage());
       }
       finally {
          try {
             con.close();
          }
          catch (Exception e) {
-            System.out.println("Error al cerrar la conexion: " + e);
+            System.out.println("Error al cerrar la conexion: " + e.getMessage());
          }
       }
       return clientes;
@@ -61,14 +61,14 @@ public class ClienteDAO implements IClienteDAO{
          }
       }
       catch (Exception e) {
-         System.out.println("Error al recuperar clientes: " + e);
+         System.out.println("Error al recuperar clientes: " + e.getMessage());
       }
       finally {
          try {
             con.close();
          }
          catch (Exception e) {
-            System.out.println("Error al cerrar la conexion: " + e);
+            System.out.println("Error al cerrar la conexion: " + e.getMessage());
          }
       }
       return false;
@@ -76,33 +76,83 @@ public class ClienteDAO implements IClienteDAO{
 
    @Override
    public boolean agregarCliente(Cliente cliente) {
+      PreparedStatement pstm;
+      Connection con = Conexion.getConexion();
+      String sql = "INSERT INTO cliente(nombre, apellido, membresia) "
+                 + " VALUES(?, ?, ?)";
+      try {
+         pstm = con.prepareStatement(sql);
+         pstm.setString(1, cliente.getNombre());
+         pstm.setString(2, cliente.getApellido());
+         pstm.setInt(3, cliente.getMembresia());
+         pstm.execute();
+         return true;
+      }
+      catch (Exception e) {
+         System.out.println("Error al agregar cliente: " + e.getMessage());
+      }
+      finally {
+         try {
+            con.close();
+         }
+         catch (Exception e) {
+            System.out.println("Error al cerrar la conexion: " + e.getMessage());
+         }
+      }
       return false;
    }
 
    @Override
    public boolean modificarCliente(Cliente cliente) {
+      PreparedStatement pstm;
+      Connection con = Conexion.getConexion();
+      var sql = "UPDATE cliente SET nombre=?, apellido=?, membresia=? "
+              + "WHERE id = ?";
+      try {
+         pstm = con.prepareStatement(sql);
+         pstm.setString(1, cliente.getNombre());
+         pstm.setString(2, cliente.getApellido());
+         pstm.setInt(3, cliente.getMembresia());
+         pstm.setInt(4, cliente.getId());
+         pstm.execute();
+         return true;
+      }
+      catch (Exception e) {
+         System.out.println("Error al modificar el cliente: " + e.getMessage());
+      }
+      finally {
+         try {
+            con.close();
+         }
+         catch (Exception e) {
+            System.out.println("Error al cerrar la conexion: " + e.getMessage());
+         }
+      }
       return false;
    }
 
    @Override
    public boolean eliminarCliente(Cliente cliente) {
+      PreparedStatement pstm;
+      Connection con = Conexion.getConexion();
+      String sql = "DELETE FROM cliente WHERE id = ?";
+      try {
+         pstm = con.prepareStatement(sql);
+         pstm.setInt(1, cliente.getId());
+         pstm.execute();
+         return true;
+      }
+      catch (Exception e) {
+         System.out.println("Error al eliminar el cliente: " + e.getMessage());
+      }
+      finally {
+         try {
+            con.close();
+         }
+         catch (Exception e) {
+            System.out.println("Error al cerrar la conexion: " + e.getMessage());
+         }
+      }
       return false;
-   }
-
-   public static void main(String[] args) {
-      IClienteDAO clienteDAO = new ClienteDAO();
-      // Listar clientes
-      // System.out.println("*** Listar Clientes ***");
-      // var clientes = clienteDAO.listarClientes();
-      // clientes.forEach(System.out::println);
-
-      // Buscar por id
-      var cliente1 = new Cliente(3);
-      System.out.println("Cliente antes de la busqueda: " + cliente1);
-      var encontrado = clienteDAO.buscarClientePorId(cliente1);
-      if (encontrado)
-         System.out.println("Cliente encontrado: " + cliente1);
-      else
-         System.out.println("No se encontro cliente: " + cliente1.getId());
    }
 }
