@@ -21,7 +21,7 @@ public class AppZonaFit {
             salir = ejecutarOpciones(opcion, consola, clienteDAO);
          }
          catch (Exception e) {
-            System.out.println();
+            System.out.println("Error al ejecutar opciones: " + e.getMessage());
          }
       }
    }
