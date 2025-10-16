@@ -18,5 +18,5 @@ public class Cliente {
    private Integer id;
    private String nombre;
    private String apellido;
-   private Integer membresaria;
+   private Integer membresia;
 }

@@ -4,9 +4,9 @@ import gm.zona_fit.modelo.Cliente;
 
 import java.util.List;
 
-public class IClienteServicio {
+public interface IClienteServicio {
    public List<Cliente> listarClientes();
-   public Cliente buscarClientePorId(Cliente cliente);
+   public Cliente buscarClientePorId(Integer idCliente);
    public void guardarCliente(Cliente cliente);
    public void eliminarCliente(Cliente cliente);
 }
